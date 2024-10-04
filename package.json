@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "compression": "^1.7.4",
+    "express": "^4.21.0",
+    "helmet": "^8.0.0",
+    "mongoose": "^8.7.0",
+    "morgan": "^1.10.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "shop-clothing",
+  "version": "1.0.0",
+  "description": "build shop clothing ",
+  "main": "server.js",
+  "keywords": [
+    "shop"
+  ],
+  "author": "tuansyho",
+  "license": "ISC",
+  "type": "module"
+}

@@ -3,7 +3,7 @@ import express from 'express'
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { checkOverload } from './helpers/check.connect.js';
-// import routes from './routes/index.js'
+import routes from './routes/index.js'
 // import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -11,6 +11,25 @@ const app = express();
 // app.use(cookieParser())
 
 // init middleware
+app.use(function (req, res, next) {
+
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+
+  // Request methods you wish to allow
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+  // Request headers you wish to allow
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization,X-Client-Id');
+
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader('Access-Control-Allow-Credentials', true);
+
+
+  // Pass to next layer of middleware
+  next();
+});
 
 app.use(morgan('combined'))
 
@@ -29,7 +48,7 @@ import './dbs/init.mongodb.js'
 
 
 // init router
-// app.use('/', routes)
+app.use('/', routes)
 
 app.use((req, res, next) => {
   const error = new Error('Not Found')

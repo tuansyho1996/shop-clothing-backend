@@ -3,10 +3,13 @@ import categoryModel from '../models/category.model.js'
 
 class CategoryService {
   createCategory = async (data) => {
-    console.log(data.category_parent)
-    const categoryParent = await categoryModel.findOne({ category_name: data.category_parent }).lean()
-    console.log(categoryParent._id)
-    const newCategory = await categoryModel.create({ category_name: data.category_name, category_description: data.category_description, category_parent_id: categoryParent._id })
+    const { category_name, category_description, category_parent } = data
+    const body = { category_name, category_description }
+    const categoryParent = await categoryModel.findOne({ category_name: category_parent }).lean()
+    if (categoryParent) {
+      body.category_parent_id = categoryParent._id
+    }
+    const newCategory = await categoryModel.create(body)
     return newCategory
   }
   getCategory = async (id) => {

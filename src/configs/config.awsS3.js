@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteBucketCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import 'dotenv/config.js'
 
 const configS3 = {
@@ -13,5 +13,5 @@ export {
   s3,
   PutObjectCommand,
   GetObjectCommand,
-  DeleteBucketCommand
+  DeleteObjectCommand
 }

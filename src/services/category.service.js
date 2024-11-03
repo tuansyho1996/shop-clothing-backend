@@ -12,42 +12,25 @@ class CategoryService {
     const newCategory = await categoryModel.create(body)
     return newCategory
   }
-  getCategory = async (id) => {
-    if (id === 'all') {
-      const categories = await categoryModel.aggregate([
-        {
-          $lookup: {
-            from: "categories",  // Join the categories collection with itself to get parent details
-            localField: "category_parent_id",
-            foreignField: "_id",
-            as: "parentCategory"
-          }
-        },
-        {
-          $unwind: {
-            path: "$parentCategory",
-            preserveNullAndEmptyArrays: true // Keep categories without parents
-          }
-        },
-        {
-          $project: {
-            "category_name": 1,
-            "category_description": 1,
-            "category_parent": "$parentCategory.category_name", // Display the parent category's name
-            "category_parent_id": 1
-          }
-        }
-      ])
+  getCategory = async (name) => {
+    if (name === 'all') {
+      const categories = await categoryModel.find().lean()
       return categories
     }
     else {
-      const category = await categoryModel.findById(id)
+      const category = await categoryModel.findById(name)
       return category
     }
   }
   updateCategory = async (id, bodyUpdate) => {
-    const categoryParent = await categoryModel.findOne({ category_name: bodyUpdate.category_parent }).lean()
-    const category = await categoryModel.findOneAndUpdate({ _id: id }, { ...bodyUpdate, category_parent_id: categoryParent._id }, { new: true })
+    if (bodyUpdate.category_parent) {
+      const categoryParent = await categoryModel.findOne({ category_name: bodyUpdate.category_parent }).lean()
+      bodyUpdate.category_parent_id = categoryParent._id
+    }
+    else {
+      bodyUpdate.category_parent_id = null
+    }
+    const category = await categoryModel.findOneAndUpdate({ _id: id }, bodyUpdate, { new: true })
     return category
   }
   deleteCategory = async (id) => {

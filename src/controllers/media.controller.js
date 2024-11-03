@@ -4,8 +4,8 @@ import MediaService from "../services/media.service.js";
 
 class MediaController {
   createMedia = async (req, res) => {
-    if(!req.file){
-        throw new BadRequestError('Request file invalid')
+    if (!req.file) {
+      throw new BadRequestError('Request file invalid')
     }
     return new CREATED({
       message: "Create successful media",
@@ -18,12 +18,18 @@ class MediaController {
       metadata: await MediaService.getMedia(req.params.id)
     }).send(res)
   }
-//   deleteMedia = async (req, res) => {
-//     return new OK({
-//       message: "Delete successful media",
-//       metadata: await MediaService.deleteMedia(req.params.id)
-//     }).send(res)
-//   }
+  deleteMedia = async (req, res) => {
+    return new OK({
+      message: "Delete successful media",
+      metadata: await MediaService.deleteMedia(req.params.name)
+    }).send(res)
+  }
+  uploadManyImages = async (req, res) => {
+    return new CREATED({
+      message: "Upload successful many image",
+      metadata: await MediaService.uploadManyImages(req.files)
+    }).send(res)
+  }
 }
 
 export default new MediaController

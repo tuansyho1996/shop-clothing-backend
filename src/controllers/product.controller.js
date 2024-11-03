@@ -11,7 +11,7 @@ class ProductController {
   getAllProduct = async (req, res) => {
     return new OK({
       message: 'Get successful all product',
-      metadata: await ProductService.getAllProduct(req.params.id)
+      metadata: await ProductService.getAllProduct(req.params.slug)
     }).send(res)
   }
   updateProduct = async (req, res) => {

@@ -3,33 +3,23 @@ import categoryModel from '../models/category.model.js'
 
 class CategoryService {
   createCategory = async (data) => {
-    const { category_name, category_description, category_parent } = data
-    const body = { category_name, category_description }
-    const categoryParent = await categoryModel.findOne({ category_name: category_parent }).lean()
-    if (categoryParent) {
-      body.category_parent_id = categoryParent._id
-    }
-    const newCategory = await categoryModel.create(body)
+    const newCategory = await categoryModel.create(data)
     return newCategory
   }
-  getCategory = async (name) => {
-    if (name === 'all') {
+  getCategory = async (slug) => {
+    if (slug === 'all') {
       const categories = await categoryModel.find().lean()
       return categories
     }
     else {
-      const category = await categoryModel.findById(name)
+      const categoriesArray = slug.split('&')
+      const category = await categoryModel.find({
+        category_slug: { $in: categoriesArray }
+      })
       return category
     }
   }
   updateCategory = async (id, bodyUpdate) => {
-    if (bodyUpdate.category_parent) {
-      const categoryParent = await categoryModel.findOne({ category_name: bodyUpdate.category_parent }).lean()
-      bodyUpdate.category_parent_id = categoryParent._id
-    }
-    else {
-      bodyUpdate.category_parent_id = null
-    }
     const category = await categoryModel.findOneAndUpdate({ _id: id }, bodyUpdate, { new: true })
     return category
   }

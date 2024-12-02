@@ -14,6 +14,18 @@ class PaymentController {
       metadata: await paymentService.capturePayment(req.params.orderID)
     }).send(res)
   }
+  completeOrder = async (req, res) => {
+    return new CREATED({
+      message: "Order completed",
+      metadata: await paymentService.completeOrder(req.body)
+    }).send(res)
+  }
+  getOrder = async (req, res) => {
+    return new OK({
+      message: "Fetch successful order",
+      metadata: await paymentService.getOrder(req.params.id)
+    }).send(res)
+  }
 }
 
 export default new PaymentController

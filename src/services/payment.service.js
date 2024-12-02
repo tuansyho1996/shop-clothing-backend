@@ -8,6 +8,8 @@ import {
   OrdersController,
   PaymentsController,
 } from "@paypal/paypal-server-sdk";
+import orderModel from "../models/order.model.js";
+import mongoose from "mongoose";
 
 
 const client = new Client({
@@ -29,6 +31,15 @@ const paymentsController = new PaymentsController(client);
 
 class PaymentService {
   createPayment = async (data) => {
+    console.log(data.items)
+    const items = data.items.map((item) => ({
+      name: item.product_name, // Name of the item
+      unitAmount: {
+        currencyCode: "USD",
+        value: item.product_price.toFixed(2), // Price of each unit
+      },
+      quantity: item.product_count.toString(), // Quantity of the item
+    }));
     const collect = {
       body: {
         intent: "CAPTURE",
@@ -36,22 +47,44 @@ class PaymentService {
           {
             amount: {
               currencyCode: "USD",
-              value: "9",
+              value: (data.itemTotal + data.shipping).toFixed(2),
+              breakdown: {
+                itemTotal: {
+                  currencyCode: "USD",
+                  value: data.itemTotal.toFixed(2), // Item total
+                },
+                shipping: {
+                  currencyCode: "USD",
+                  value: data.shipping.toFixed(2), // Shipping fee
+                },
+              },
             },
+            items,
             shipping: {
+              name: {
+                fullName: `${data.givenName} ${data.surname}`
+              },
               address: {
-                addressLine1: "tuan St",
-                addressLine2: "Apt 4B",
-                adminArea2: "San Jose", // City
-                adminArea1: "CA", // State
-                postalCode: "95131",
-                countryCode: "US"
-              }
-            }
+                addressLine1: data.addressLine1,
+                addressLine2: data?.addressLine2 || '',
+                adminArea2: data.adminArea2, // City
+                adminArea1: data.adminArea1, // State
+                postalCode: data.postalCode,
+                countryCode: data.countryCode
+              },
+            },
           },
         ],
-        application_context: {
-          shipping_preference: 'SET_PROVIDED_ADDRESS', // Ensures provided address is used
+        payer: {
+          name: {
+            givenName: data.givenName, // Replace with dynamic values
+            surname: data.surname,      // Replace with dynamic values
+          },
+          emailAddress: data.emailAddress, // Replace with dynamic value
+        },
+        applicationContext: {
+          shippingPreference: 'SET_PROVIDED_ADDRESS',
+          userAction: 'PAY_NOW', // Ensures "Pay Now" button appears
         },
       }
     };
@@ -79,5 +112,22 @@ class PaymentService {
     };
 
   };
+  completeOrder = async (body) => {
+    const { infoOrder, infoCustomer } = body
+    const newOrder = await orderModel.create({ order_info: infoOrder, order_info_customer: infoCustomer })
+    return newOrder
+  }
+  getOrder = async (_id) => {
+    console.log(_id)
+    if (_id === 'all') {
+      const orders = await orderModel.find().lean()
+      return orders
+    }
+    else {
+
+      const order = await orderModel.find({ _id })
+      return order
+    }
+  }
 }
 export default new PaymentService

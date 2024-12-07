@@ -124,8 +124,8 @@ class PaymentService {
       return orders
     }
     else {
-
-      const order = await orderModel.find({ _id })
+      const order = await orderModel.findById(_id)
+      console.log(order)
       return order
     }
   }

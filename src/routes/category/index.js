@@ -4,6 +4,9 @@ import { asyncHandle } from "../../auth/checkAuth.js"
 import CategoryController from "../../controllers/category.controller.js"
 
 const router = express.Router()
+router.get('/top-category', asyncHandle(CategoryController.getTopCategory))
+router.put('/top-category', asyncHandle(CategoryController.updateTopCategory))
+
 
 router.get('/:id', asyncHandle(CategoryController.getCategory))
 router.post('/', asyncHandle(CategoryController.createCategory))

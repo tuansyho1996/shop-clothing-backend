@@ -24,6 +24,10 @@ const categorySchema = mongoose.Schema(
     category_parent: {
       type: String,
       trim: true
+    },
+    category_image: {
+      type: [String],
+      default: []
     }
   },
   {

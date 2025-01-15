@@ -1,3 +1,4 @@
+'use strict'
 import { BadRequestError } from '../core/error.response.js'
 import categoryModel from '../models/category.model.js'
 import topCategory from '../models/top.category.model.js'
@@ -29,12 +30,24 @@ class CategoryService {
     return deleteCategory
   }
   getTopCategory = async () => {
-    const category = await topCategory.findOne({ name: 'top categories' }).lean()
+    const category = await topCategory.find().lean()
     return category
   }
   updateTopCategory = async (bodyUpdate) => {
-    console.log(bodyUpdate)
-    const categories = await topCategory.findOneAndUpdate({ name: 'top categories' }, { categories: bodyUpdate }, { new: true, upsert: true })
+    const { top_ct_name_old, ...updateFields } = bodyUpdate;
+    const category = await topCategory.findOneAndUpdate(
+      { _id: bodyUpdate._id },
+      {
+        $set: updateFields
+      }
+      ,
+      { new: true, upsert: true, projection: { __v: 0 } })
+    const categories = await topCategory.find();
+    return categories
+  }
+  deleteTopCategory = async (id) => {
+    const deleteCategory = await topCategory.deleteOne({ _id: id })
+    const categories = await topCategory.find();
     return categories
   }
 }

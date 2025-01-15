@@ -6,6 +6,7 @@ import 'dotenv/config.js'
 
 class MediaService {
   createMedia = async (file) => {
+    console.log(process.env.AWS_BUCKET_NAME)
     const cloudfrontDistributionDomain = 'https://d2jfx0w9sp915a.cloudfront.net/'
     const randomName = () => crypto.randomBytes(16).toString('hex')
     const imageName = randomName()

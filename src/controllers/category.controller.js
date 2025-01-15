@@ -39,6 +39,18 @@ class CategoryController {
       metadata: await CategoryService.updateTopCategory(req.body)
     }).send(res)
   }
+  getTopCategory = async (req, res) => {
+    return new OK({
+      message: "Get successful top category",
+      metadata: await CategoryService.getTopCategory()
+    }).send(res)
+  }
+  deleteTopCategory = async (req, res) => {
+    return new OK({
+      message: "Delete successful top category",
+      metadata: await CategoryService.deleteTopCategory(req.params.id)
+    }).send(res)
+  }
 }
 
 export default new CategoryController

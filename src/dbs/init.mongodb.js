@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 // import { countConnect } from "../helpers/check.connect.js"
 import configDB from "../configs/config.mongodb.js"
 
-const connectString = `mongodb://${configDB.db.host}:${configDB.db.port}/shop-clothing`;
+const connectString = `mongodb://${configDB.db.user}:${configDB.db.pass}@${configDB.db.host}:${configDB.db.port}/shop-clothing?authSource=admin`;
 
 class Database {
   constructor() {
@@ -11,7 +11,6 @@ class Database {
   }
   //connect
   connect(type = 'mongodb') {
-
     if (1 === 1) {
       mongoose.set('debug', true)
       mongoose.set('debug', { color: true })

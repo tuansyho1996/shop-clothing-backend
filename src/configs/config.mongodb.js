@@ -7,7 +7,9 @@ const dev = {
   db: {
     host: process.env.DEV_DB_HOST || '0.0.0.0',
     port: process.env.DEV_DB_PORT || 27017,
-    name: process.env.DEV_DB_NAME || `shopClothingDEV`
+    name: process.env.DEV_DB_NAME || `shopClothingDEV`,
+    user: process.env.DEV_DB_USER || 'admin',
+    pass: process.env.DEV_DB_PASS || 'admin123',
   }
 }
 const pro = {
@@ -17,7 +19,9 @@ const pro = {
   db: {
     host: process.env.PRO_DB_HOST || '0.0.0.0',
     port: process.env.PRO_DB_PORT || 27017,
-    name: process.env.PRO_DB_NAME || `shopPRO`
+    name: process.env.PRO_DB_NAME || `shopPRO`,
+    user: process.env.DEV_DB_USER || 'admin',
+    pass: process.env.DEV_DB_PASS || 'admin123',
   }
 }
 

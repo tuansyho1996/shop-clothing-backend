@@ -24,6 +24,12 @@ class MediaController {
       metadata: await MediaService.deleteMedia(req.params.name)
     }).send(res)
   }
+  deleteMediaMultiple = async (req, res) => {
+    return new OK({
+      message: "Delete successful multiple media",
+      metadata: await MediaService.deleteMediaMultiple(req.body)
+    }).send(res)
+  }
   uploadManyImages = async (req, res) => {
     return new CREATED({
       message: "Upload successful many image",

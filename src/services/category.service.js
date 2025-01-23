@@ -17,7 +17,7 @@ class CategoryService {
       const categoriesArray = slug.split('&')
       const category = await categoryModel.find({
         category_slug: { $in: categoriesArray }
-      })
+      }).sort({ category_level: 1, }).lean()
       return category
     }
   }

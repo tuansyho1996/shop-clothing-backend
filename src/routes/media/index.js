@@ -8,6 +8,7 @@ const router = express.Router()
 
 router.get('/', asyncHandle(MediaController.getMedia))
 router.post('/', uploadMemory.single('image'), asyncHandle(MediaController.createMedia))
+router.delete('/multiple', asyncHandle(MediaController.deleteMediaMultiple))
 router.delete('/:name', asyncHandle(MediaController.deleteMedia))
 router.post('/many', uploadMemory.array('images', 20), asyncHandle(MediaController.uploadManyImages))
 

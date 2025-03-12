@@ -4,6 +4,8 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { checkOverload } from './helpers/check.connect.js';
 import routes from './routes/index.js'
+import connectDB from './dbs/init.mongodb.js';
+
 // import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -47,7 +49,7 @@ app.use(express.urlencoded({
 
 
 // init db
-import './dbs/init.mongodb.js'
+connectDB()
 // import { v4 as uuidv4 } from 'uuid';
 // import mylogger from './logger/mylogger.logger.js';
 

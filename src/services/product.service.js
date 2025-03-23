@@ -13,6 +13,9 @@ class ProductService {
     }
     else {
       const product = await productModel.findOne({ product_slug: slug }).lean()
+      if (product.product_list_categories.includes('unisex')) {
+        product.product_list_categories = product.product_list_categories.filter((cat) => cat !== 'men' && cat !== 'women')
+      }
       const categories = await categoryModel.find({ category_slug: { $in: product.product_list_categories } }).sort({ category_level: 1, }).lean()
       const categoryNames = categories.map((cat) => cat.category_name);
       product.product_list_categories_name = categoryNames

@@ -3,6 +3,8 @@ import categoryModel from '../models/category.model.js'
 
 class ProductService {
   createProduct = async (data) => {
+    const categories = await categoryModel.find({ category_slug: { $in: data.product_list_categories } }).sort({ category_level: 1, }).lean()
+    data.product_list_categories = categories.map((cat) => cat.category_slug);
     const newProduct = await productModel.create(data)
     return newProduct
   }
@@ -13,6 +15,7 @@ class ProductService {
     }
     else {
       const product = await productModel.findOne({ product_slug: slug }).lean()
+      console.log('product', product)
       // if (product.product_list_categories.includes('unisex')) {
       //   product.product_list_categories = product.product_list_categories.filter((cat) => cat !== 'men' && cat !== 'women')
       // }
@@ -23,6 +26,8 @@ class ProductService {
     }
   }
   updateProduct = async (_id, bodyUpdate) => {
+    const categories = await categoryModel.find({ category_slug: { $in: bodyUpdate.product_list_categories } }).sort({ category_level: 1, }).lean()
+    bodyUpdate.product_list_categories = categories.map((cat) => cat.category_slug);
     const product = await productModel.findByIdAndUpdate(_id, bodyUpdate, { new: true })
     return product
   }

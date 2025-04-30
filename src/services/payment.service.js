@@ -31,7 +31,6 @@ const paymentsController = new PaymentsController(client);
 
 class PaymentService {
   createPayment = async (data) => {
-    console.log(data.items)
     const items = data.items.map((item) => ({
       name: item.product_name, // Name of the item
       unitAmount: {

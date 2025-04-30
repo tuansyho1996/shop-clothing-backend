@@ -6,6 +6,8 @@ import media from './media/index.js'
 import productOfCategory from './products-of-category/index.js'
 import payment from './payment/index.js'
 import user from './user/index.js'
+import review from './review/index.js'
+import order from './order/index.js'
 
 const router = express.Router()
 
@@ -15,5 +17,7 @@ router.use('/api/category', category)
 router.use('/api/media', media)
 router.use('/api/payment', payment)
 router.use('/api/user', user)
+router.use('/api/review', review)
+router.use('/api/order', order)
 
 export default router

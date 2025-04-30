@@ -1,5 +1,6 @@
 'use strict'
 
+import e from "express"
 import mongoose, { Schema } from "mongoose"
 import slugify from "slugify"
 
@@ -11,6 +12,11 @@ const orderSchema = mongoose.Schema(
     },
     order_info_customer: {
       type: Schema.Types.Mixed,
+    },
+    order_status: {
+      type: String,
+      enum: ['Comfirmed', 'Processing', 'Shipped', 'Completed'],
+      default: 'comfirmed'
     },
   },
   {

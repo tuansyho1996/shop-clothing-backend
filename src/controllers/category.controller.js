@@ -33,7 +33,6 @@ class CategoryController {
     }).send(res)
   }
   updateTopCategory = async (req, res) => {
-    console.log('check')
     return new OK({
       message: "Update successful op category",
       metadata: await CategoryService.updateTopCategory(req.body)

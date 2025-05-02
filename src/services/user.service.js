@@ -1,5 +1,6 @@
 'use strict'
 import userModel from "../models/user.model.js"
+import orderModel from "../models/order.model.js"
 import bcrypt from 'bcrypt'
 import { BadRequestError, AuthFailureError } from "../core/error.response.js"
 import { getInfoData } from "../utils/index.js"
@@ -27,7 +28,9 @@ class UserService {
       throw new AuthFailureError('Password is not valid')
     }
     if (isUser) {
-      return { user: getInfoData({ filed: ['_id', 'usr_email', 'usr_first_name', 'usr_last_name'], object: isUser }) }
+      const orders = await orderModel.find({ order_user_id: isUser._id });
+      isUser.usr_orders = orders
+      return { user: getInfoData({ filed: ['_id', 'usr_email', 'usr_first_name', 'usr_last_name', 'usr_orders'], object: isUser }) }
     }
     return null
   }

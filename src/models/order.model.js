@@ -1,8 +1,6 @@
 'use strict'
 
-import e from "express"
 import mongoose, { Schema } from "mongoose"
-import slugify from "slugify"
 
 const orderSchema = mongoose.Schema(
   {
@@ -18,6 +16,10 @@ const orderSchema = mongoose.Schema(
       enum: ['Comfirmed', 'Processing', 'Shipped', 'Completed'],
       default: 'comfirmed'
     },
+    order_user_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    }
   },
   {
     timestamps: true, // Automatically creates `createdAt` and `updatedAt`

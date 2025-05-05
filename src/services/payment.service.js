@@ -1,15 +1,11 @@
 import "dotenv/config";
 import {
-  ApiError,
-  CheckoutPaymentIntent,
   Client,
   Environment,
   LogLevel,
   OrdersController,
-  PaymentsController,
 } from "@paypal/paypal-server-sdk";
 import orderModel from "../models/order.model.js";
-import mongoose from "mongoose";
 
 
 const client = new Client({
@@ -26,7 +22,6 @@ const client = new Client({
   },
 });
 const ordersController = new OrdersController(client);
-const paymentsController = new PaymentsController(client);
 
 
 class PaymentService {
@@ -112,12 +107,12 @@ class PaymentService {
 
   };
   completeOrder = async (body) => {
-    const { infoOrder, infoCustomer } = body
-    const newOrder = await orderModel.create({ order_info: infoOrder, order_info_customer: infoCustomer })
+    const { infoOrder, infoCustomer, userId } = body
+    console.log('body', body)
+    const newOrder = await orderModel.create({ order_info: infoOrder, order_info_customer: infoCustomer, order_user_id: userId })
     return newOrder
   }
   getOrder = async (_id) => {
-    console.log(_id)
     if (_id === 'all') {
       const orders = await orderModel.find().lean()
       return orders

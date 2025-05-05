@@ -14,7 +14,7 @@ const orderSchema = mongoose.Schema(
     order_status: {
       type: String,
       enum: ['Comfirmed', 'Processing', 'Shipped', 'Completed'],
-      default: 'comfirmed'
+      default: 'Comfirmed'
     },
     order_user_id: {
       type: Schema.Types.ObjectId,

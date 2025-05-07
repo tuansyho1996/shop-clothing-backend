@@ -8,6 +8,7 @@ import payment from './payment/index.js'
 import user from './user/index.js'
 import review from './review/index.js'
 import order from './order/index.js'
+import blog from './blog/index.js'
 
 const router = express.Router()
 
@@ -19,5 +20,6 @@ router.use('/api/payment', payment)
 router.use('/api/user', user)
 router.use('/api/review', review)
 router.use('/api/order', order)
+router.use('/api/blog', blog)
 
 export default router

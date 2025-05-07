@@ -9,6 +9,7 @@ import user from './user/index.js'
 import review from './review/index.js'
 import order from './order/index.js'
 import blog from './blog/index.js'
+// import auth from './auth/index.js'
 
 const router = express.Router()
 

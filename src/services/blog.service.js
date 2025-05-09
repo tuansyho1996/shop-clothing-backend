@@ -1,60 +1,45 @@
+import blogModel from '../models/blog.model.js';
+import { BadRequestError } from '../core/error.response.js';
 class BlogService {
-    constructor(BlogModel) {
-        this.BlogModel = BlogModel;
-    }
-
-    async createBlog(blogData) {
-        try {
-            const blog = new this.BlogModel(blogData);
-            await blog.save();
-            return blog;
-        } catch (error) {
-            throw new Error('Error creating blog: ' + error.message);
+    createBlog = async (data) => {
+        // Logic to create a blog
+        const newBlog = await blogModel.create(data);
+        if (!newBlog) {
+            throw new BadRequestError('Error creating blog');
         }
-    }
-
-    async getAllBlogs() {
-        try {
-            const blogs = await this.BlogModel.find();
+        return newBlog;
+    };
+    getBlog = async (slug) => {
+        // Logic to get all blogs
+        if (slug === 'all') {
+            const blogs = await blogModel.find();
+            if (!blogs) {
+                throw new BadRequestError('Error fetching blogs');
+            }
             return blogs;
-        } catch (error) {
-            throw new Error('Error fetching blogs: ' + error.message);
-        }
-    }
-
-    async getBlogById(blogId) {
-        try {
-            const blog = await this.BlogModel.findById(blogId);
+        } else {
+            const blog = await blogModel.findOne({ blog_slug: slug });
             if (!blog) {
-                throw new Error('Blog not found');
-            }
-            return blog;
-        } catch (error) {
-            throw new Error('Error fetching blog: ' + error.message);
-        }
-    }
-    async updateBlog(blogId, blogData) {
-        try {
-            const blog = await this.BlogModel.findByIdAndUpdate(blogId, blogData, { new: true });
-            if (!blog) {
-                throw new Error('Blog not found');
+                throw new BadRequestError('Blog not found');
             }
             return blog;
         }
-        catch (error) {
-            throw new Error('Error updating blog: ' + error.message);
+    };
+    deleteBlog = async (id) => {
+        // Logic to delete a blog
+        const deletedBlog = await blogModel.findByIdAndDelete(id);
+        if (!deletedBlog) {
+            throw new BadRequestError('Error deleting blog');
         }
-    }
-    async deleteBlog(blogId) {
-        try {
-            const blog = await this.BlogModel.findByIdAndDelete(blogId);
-            if (!blog) {
-                throw new Error('Blog not found');
-            }
-            return blog;
-        } catch (error) {
-            throw new Error('Error deleting blog: ' + error.message);
+        return deletedBlog;
+    };
+    updateBlog = async (id, data) => {
+        // Logic to update a blog
+        const updatedBlog = await blogModel.findByIdAndUpdate(id, data, { new: true });
+        if (!updatedBlog) {
+            throw new BadRequestError('Error updating blog');
         }
+        return updatedBlog;
     }
 }
-export default BlogService;
+export default new BlogService;

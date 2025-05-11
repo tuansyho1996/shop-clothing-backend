@@ -9,6 +9,7 @@ import user from './user/index.js'
 import review from './review/index.js'
 import order from './order/index.js'
 import blog from './blog/index.js'
+import url from './url/index.js'
 // import auth from './auth/index.js'
 
 const router = express.Router()
@@ -22,5 +23,6 @@ router.use('/api/user', user)
 router.use('/api/review', review)
 router.use('/api/order', order)
 router.use('/api/blog', blog)
+router.use('/api/url', url)
 
 export default router

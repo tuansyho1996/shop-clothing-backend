@@ -1,15 +1,15 @@
 'use strict'
 
-import mongoose from "mongoose"
+import mongoose, { Schema } from "mongoose"
 
-const urlSchema = mongoose.Schema(
+const globalSchema = mongoose.Schema(
     {
-        url_name: {
+        global_name: {
             type: String,
             trim: true,
             required: true
         },
-        url_path: {
+        global_value: {
             type: String,
             required: true,
             trim: true
@@ -20,4 +20,4 @@ const urlSchema = mongoose.Schema(
     }
 )
 
-export default mongoose.model('Media', urlSchema)
+export default mongoose.model('Global', globalSchema)

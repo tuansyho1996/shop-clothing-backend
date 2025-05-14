@@ -14,7 +14,7 @@ const client = new Client({
     oAuthClientSecret: process.env.PAYPAL_CLIENT_SECRET,
   },
   timeout: 0,
-  environment: Environment.Sandbox,
+  environment: Environment.Production,
   logging: {
     logLevel: LogLevel.Info,
     logRequest: { logBody: true },
@@ -108,7 +108,6 @@ class PaymentService {
   };
   completeOrder = async (body) => {
     const { infoOrder, infoCustomer, userId } = body
-    console.log('body', body)
     const newOrder = await orderModel.create({ order_info: infoOrder, order_info_customer: infoCustomer, order_user_id: userId })
     return newOrder
   }

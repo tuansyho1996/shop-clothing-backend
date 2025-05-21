@@ -8,10 +8,22 @@ class ProductController {
       metadata: await ProductService.createProduct(req.body)
     }).send(res)
   }
-  getAllProduct = async (req, res) => {
+  getProduct = async (req, res) => {
     return new OK({
       message: 'Get successful all product',
-      metadata: await ProductService.getAllProduct(req.params.slug)
+      metadata: await ProductService.getProduct(req.params.slug)
+    }).send(res)
+  }
+  getProductShop = async (req, res) => {
+    return new OK({
+      message: 'Get successful product for shop',
+      metadata: await ProductService.getProductShop(req.params.slug)
+    }).send(res)
+  }
+  getProductBestSeller = async (req, res) => {
+    return new OK({
+      message: 'Get successful best seller product',
+      metadata: await ProductService.getProductBestSeller()
     }).send(res)
   }
   updateProduct = async (req, res) => {

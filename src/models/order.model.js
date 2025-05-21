@@ -16,6 +16,9 @@ const orderSchema = mongoose.Schema(
       enum: ['Comfirmed', 'Processing', 'Shipped', 'Completed'],
       default: 'Comfirmed'
     },
+    number_order: {
+      type: Number,
+    }
   },
   {
     timestamps: true, // Automatically creates `createdAt` and `updatedAt`

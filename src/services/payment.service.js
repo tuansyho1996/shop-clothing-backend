@@ -6,6 +6,7 @@ import {
   OrdersController,
 } from "@paypal/paypal-server-sdk";
 import orderModel from "../models/order.model.js";
+import globalModel from "../models/global.model.js";
 
 
 const client = new Client({
@@ -108,7 +109,15 @@ class PaymentService {
   };
   completeOrder = async (body) => {
     const { infoOrder, infoCustomer, userId } = body
-    const newOrder = await orderModel.create({ order_info: infoOrder, order_info_customer: infoCustomer, order_user_id: userId })
+    const quantity = await globalModel.findOne({ global_name: 'quantity_sell' })
+    let nextNumberOrder = 1;
+    const latestOrder = await orderModel.findOne({ number_order: { $type: "number" } })
+      .sort({ number_order: -1 })
+      .lean();
+    if (latestOrder && typeof latestOrder.number_order === 'number') {
+      nextNumberOrder = latestOrder.number_order + 1;
+    }
+    const newOrder = await orderModel.create({ order_info: infoOrder, order_info_customer: infoCustomer, order_user_id: userId, number_order: parseInt(quantity?.global_value) + nextNumberOrder })
     return newOrder
   }
   getOrder = async (_id) => {
@@ -118,7 +127,6 @@ class PaymentService {
     }
     else {
       const order = await orderModel.findById(_id)
-      console.log(order)
       return order
     }
   }

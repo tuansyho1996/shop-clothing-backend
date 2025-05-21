@@ -1,6 +1,7 @@
 import productModel from '../models/product.model.js'
 import categoryModel from '../models/category.model.js'
 import reviewModel from '../models/review.model.js'
+import globalModel from '../models/global.model.js'
 
 class ProductService {
   createProduct = async (data) => {
@@ -9,22 +10,63 @@ class ProductService {
     const newProduct = await productModel.create(data)
     return newProduct
   }
-  getAllProduct = async (slug) => {
+  getProductShop = async (slug) => {
+    const page = parseInt(slug);
+    const limit = 8;
+    const skip = (page - 1) * limit;
+
+    if (!isNaN(page) && page > 0) {
+      const [totalProducts, products] = await Promise.all([
+        productModel.countDocuments(),
+        productModel.find().sort({ createdAt: -1 }).skip(skip).limit(limit).lean()
+      ]);
+      const totalPages = Math.ceil(totalProducts / limit);
+      return {
+        products,
+        totalProducts,
+        currentPage: page,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      };
+    }
+  }
+  getProduct = async (slug) => {
     if (slug === 'all') {
       const products = await productModel.find().sort({ createdAt: -1 }).lean()
       return products
     }
-    else {
-      const product = await productModel.findOne({ product_slug: slug }).lean()
-      if (product) {
-        const reviews = await reviewModel.find({ review_product_id: product._id }).lean();
-        product.product_reviews = reviews; // Add reviews array to the product object
+    if (slug === 'products_home') {
+      const limit = await globalModel.findOne({ global_name: 'products_home' })
+      const query = productModel.find().sort({ createdAt: -1 });
+      if (!isNaN(limit) && limit > 0) {
+        query.limit(limit); // 
       }
-      const categories = await categoryModel.find({ category_slug: { $in: product.product_list_categories } }).sort({ category_level: 1, }).lean()
-      const categoryNames = categories.map((cat) => cat.category_name);
-      product.product_list_categories_name = categoryNames;
-      return product
+      const products = await query.lean();
+      return products
     }
+    else {
+      const product = await productModel.findOne({ product_slug: slug }).lean();
+      if (!product) return null;
+      const [reviews, categories] = await Promise.all([
+        reviewModel.find({ review_product_id: product._id }).lean(),
+        categoryModel
+          .find({ category_slug: { $in: product.product_list_categories } })
+          .sort({ category_level: 1 })
+          .lean(),
+      ]);
+
+      const filteredCategories = categories.filter(cat => cat.category_slug !== 'best-seller');
+
+      return {
+        ...product,
+        product_reviews: reviews,
+        product_list_categories_name: filteredCategories.map(cat => cat.category_name)
+      };
+    }
+  }
+  getProductBestSeller = async () => {
+    const products = await productModel.find({ product_list_categories: 'best-seller' }).sort({ createdAt: -1 }).lean()
+    return products
   }
   updateProduct = async (_id, bodyUpdate) => {
     const categories = await categoryModel.find({ category_slug: { $in: bodyUpdate.product_list_categories } }).sort({ category_level: 1, }).lean()

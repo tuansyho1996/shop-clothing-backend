@@ -7,7 +7,7 @@ import {
 } from "@paypal/paypal-server-sdk";
 import orderModel from "../models/order.model.js";
 import globalModel from "../models/global.model.js";
-
+import sendOrderConfirmation from "../utils/mailer.js";
 
 const client = new Client({
   clientCredentialsAuthCredentials: {

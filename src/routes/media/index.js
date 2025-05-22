@@ -6,7 +6,7 @@ import { uploadMemory } from "../../configs/config.multer.js"
 
 const router = express.Router()
 
-router.get('/', asyncHandle(MediaController.getMedia))
+router.get('/:page', asyncHandle(MediaController.getMedia))
 router.post('/', uploadMemory.single('image'), asyncHandle(MediaController.createMedia))
 router.delete('/multiple', asyncHandle(MediaController.deleteMediaMultiple))
 router.delete('/:name', asyncHandle(MediaController.deleteMedia))

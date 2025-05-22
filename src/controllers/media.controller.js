@@ -15,7 +15,7 @@ class MediaController {
   getMedia = async (req, res) => {
     return new OK({
       message: "Get successful media",
-      metadata: await MediaService.getMedia(req.params.id)
+      metadata: await MediaService.getMedia(req.params.page)
     }).send(res)
   }
   deleteMedia = async (req, res) => {

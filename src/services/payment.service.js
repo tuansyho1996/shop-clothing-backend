@@ -118,6 +118,9 @@ class PaymentService {
       nextNumberOrder = latestOrder.number_order + 1;
     }
     const newOrder = await orderModel.create({ order_info: infoOrder, order_info_customer: infoCustomer, order_user_id: userId, number_order: parseInt(quantity?.global_value) + nextNumberOrder })
+    if (newOrder) {
+      await sendOrderConfirmation(newOrder?.order_info_customer, newOrder?.order_info)
+    }
     return newOrder
   }
   getOrder = async (_id) => {

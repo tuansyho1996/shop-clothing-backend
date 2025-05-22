@@ -49,9 +49,24 @@ class MediaService {
     }
     return images
   }
-  getMedia = async () => {
-    const images = await mediaModel.find().sort({ createdAt: -1 }).lean()
-    return images
+  getMedia = async (page) => {
+    console.log('page', page)
+    const pageNumber = parseInt(page)
+    const pageSize = 30
+    const skip = (pageNumber - 1) * pageSize
+
+    const images = await mediaModel
+      .find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(pageSize)
+      .lean()
+    const totalCount = await mediaModel.countDocuments()
+    return {
+      images,
+      totalPages: Math.ceil(totalCount / pageSize),
+      currentPage: pageNumber,
+    }
   }
   deleteMedia = async (name) => {
     const command = new DeleteObjectCommand({

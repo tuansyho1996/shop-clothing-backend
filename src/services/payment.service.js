@@ -27,6 +27,7 @@ const ordersController = new OrdersController(client);
 
 class PaymentService {
   createPayment = async (data) => {
+    console.log('data', data)
     const items = data.items.map((item) => ({
       name: item.product_name, // Name of the item
       unitAmount: {
@@ -65,6 +66,7 @@ class PaymentService {
                 adminArea2: data.adminArea2, // City
                 adminArea1: data.adminArea1, // State
                 postalCode: data.postalCode,
+                conuntry: data.country,
                 countryCode: data.countryCode
               },
             },

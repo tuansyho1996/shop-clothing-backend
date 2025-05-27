@@ -18,14 +18,16 @@ class ProductService {
     if (!isNaN(page) && page > 0) {
       const [totalProducts, products] = await Promise.all([
         productModel.countDocuments(),
-        productModel.find().sort({ createdAt: -1 }).skip(skip).limit(limit).lean()
+        productModel.find({
+          product_list_categories: { $nin: ['kid'] }
+        }).sort({ createdAt: -1 }).skip(skip).limit(limit).lean()
       ]);
       const totalPages = Math.ceil(totalProducts / limit);
       return {
         products,
         totalProducts,
         currentPage: page,
-        hasNextPage: page < totalPages,
+        hasNextPage: page + 1 < totalPages,
         hasPrevPage: page > 1,
       };
     }
@@ -37,7 +39,9 @@ class ProductService {
     }
     if (slug === 'products_home') {
       const limit = await globalModel.findOne({ global_name: 'products_home' })
-      const query = productModel.find().sort({ createdAt: -1 });
+      const query = productModel.find({
+        product_list_categories: { $nin: ['kid'] }
+      }).sort({ createdAt: -1 });
       if (!isNaN(limit) && limit > 0) {
         query.limit(limit); // 
       }
@@ -60,7 +64,8 @@ class ProductService {
       return {
         ...product,
         product_reviews: reviews,
-        product_list_categories_name: filteredCategories.map(cat => cat.category_name)
+        product_list_categories_name: filteredCategories.map(cat => cat.category_name),
+        product_list_categories: filteredCategories.map(cat => cat.category_slug),
       };
     }
   }

@@ -16,7 +16,12 @@ class ProductsOfCategoryService {
       },
       {
         $match: {
-          'categoryDetails.category_slug': { $all: categoryArray }, 
+          'categoryDetails.category_slug': { $all: categoryArray },
+        },
+      },
+      {
+        $sort: {
+          createdAt: -1, // Sắp xếp giảm dần theo ngày tạo (mới nhất trước)
         },
       },
       {
@@ -24,7 +29,8 @@ class ProductsOfCategoryService {
           categoryDetails: 0, // Exclude category details if needed
         },
       },
-    ]);
+    ])
+      ;
     return productsOfCategory
   }
 }

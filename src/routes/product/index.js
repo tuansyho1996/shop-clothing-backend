@@ -5,7 +5,7 @@ import ProductController from '../../controllers/product.controller.js'
 
 const router = express.Router()
 
-router.get('/shop/:slug', asyncHandle(ProductController.getProductShop))
+router.get('/shop', asyncHandle(ProductController.getProductShop))
 router.get('/best-seller', asyncHandle(ProductController.getProductBestSeller))
 router.get('/:slug', asyncHandle(ProductController.getProduct))
 

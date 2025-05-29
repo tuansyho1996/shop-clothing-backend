@@ -10,9 +10,9 @@ class ProductService {
     const newProduct = await productModel.create(data)
     return newProduct
   }
-  getProductShop = async (slug) => {
-    const page = parseInt(slug);
-    const limit = 8;
+  getProductShop = async (page) => {
+    page = parseInt(page);
+    const limit = 12;
     const skip = (page - 1) * limit;
 
     if (!isNaN(page) && page > 0) {
@@ -22,13 +22,10 @@ class ProductService {
           product_list_categories: { $nin: ['kid'] }
         }).sort({ createdAt: -1 }).skip(skip).limit(limit).lean()
       ]);
-      const totalPages = Math.ceil(totalProducts / limit);
+      const totalPage = Math.ceil(totalProducts / limit);
       return {
         products,
-        totalProducts,
-        currentPage: page,
-        hasNextPage: page + 1 < totalPages,
-        hasPrevPage: page > 1,
+        totalPage
       };
     }
   }

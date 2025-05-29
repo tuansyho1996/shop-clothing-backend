@@ -1,5 +1,4 @@
 'use strict'
-import { BadRequestError } from '../core/error.response.js'
 import categoryModel from '../models/category.model.js'
 import topCategory from '../models/top.category.model.js'
 

@@ -3,15 +3,21 @@ import categoryModel from '../models/category.model.js'
 import productModel from '../models/product.model.js';
 
 class ProductsOfCategoryService {
-  getProductsCategory = async (category) => {
-    const categoryArray = category.split("&")
-    const productsOfCategory = await productModel.aggregate([
+  getProductsCategory = async (category, limit, page) => {
+    const categoryArray = category.split("&");
+    // Đảm bảo limit và page là số nguyên hợp lệ
+    limit = parseInt(limit) || 12;
+    page = parseInt(page) || 1;
+    const skip = (page - 1) * limit;
+
+    // Đếm tổng số sản phẩm thỏa điều kiện
+    const totalProducts = await productModel.aggregate([
       {
         $lookup: {
-          from: 'categories', // Collection name for `Category`
-          localField: 'product_list_categories', // Field in `Product` schema
-          foreignField: 'category_slug', // Field in `Category` schema
-          as: 'categoryDetails', // Output array field
+          from: 'categories',
+          localField: 'product_list_categories',
+          foreignField: 'category_slug',
+          as: 'categoryDetails',
         },
       },
       {
@@ -20,18 +26,45 @@ class ProductsOfCategoryService {
         },
       },
       {
-        $sort: {
-          createdAt: -1, // Sắp xếp giảm dần theo ngày tạo (mới nhất trước)
+        $count: "total",
+      },
+    ]);
+
+    const total = totalProducts[0]?.total || 0;
+    const totalPages = Math.ceil(total / limit);
+
+    // Truy vấn sản phẩm phân trang
+    const products = await productModel.aggregate([
+      {
+        $lookup: {
+          from: 'categories',
+          localField: 'product_list_categories',
+          foreignField: 'category_slug',
+          as: 'categoryDetails',
         },
       },
       {
-        $project: {
-          categoryDetails: 0, // Exclude category details if needed
+        $match: {
+          'categoryDetails.category_slug': { $all: categoryArray },
         },
       },
-    ])
-      ;
-    return productsOfCategory
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $skip: skip,
+      },
+      {
+        $limit: limit,
+      },
+      {
+        $project: {
+          categoryDetails: 0,
+        },
+      },
+    ]);
+
+    return { products, totalPages };
   }
 }
 export default new ProductsOfCategoryService

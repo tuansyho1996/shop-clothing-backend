@@ -52,7 +52,7 @@ class MediaService {
   getMedia = async (page) => {
     console.log('page', page)
     const pageNumber = parseInt(page)
-    const pageSize = 30
+    const pageSize = 40
     const skip = (pageNumber - 1) * pageSize
 
     const images = await mediaModel

@@ -17,7 +17,9 @@ class ProductService {
 
     if (!isNaN(page) && page > 0) {
       const [totalProducts, products] = await Promise.all([
-        productModel.countDocuments(),
+        productModel.countDocuments({
+          product_list_categories: { $nin: ['kid'] }
+        }),
         productModel.find({
           product_list_categories: { $nin: ['kid'] }
         }).sort({ createdAt: -1 }).skip(skip).limit(limit).lean()

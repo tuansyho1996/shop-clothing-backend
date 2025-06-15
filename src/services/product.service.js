@@ -59,7 +59,7 @@ class ProductService {
       ]);
 
       const filteredCategories = categories.filter(cat => cat.category_slug !== 'best-seller');
-
+      const countNumberProducts = await productModel.countDocuments()
       return {
         ...product,
         product_reviews: reviews,

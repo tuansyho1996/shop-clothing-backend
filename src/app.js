@@ -13,7 +13,7 @@ const app = express();
 // app.use(cookieParser())
 
 // init middleware
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173'];
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173', 'http://0.0.0.0:3000', 'http://192.168.1.177:3000'];
 app.use(function (req, res, next) {
 
   // Website you wish to allow to connect

@@ -9,7 +9,7 @@ class CategoryService {
   }
   getCategory = async (slug) => {
     if (slug === 'all') {
-      const categories = await categoryModel.find().lean()
+      const categories = await categoryModel.find().sort({ category_level: 1, }).lean()
       return categories
     }
     else {

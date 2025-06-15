@@ -2,11 +2,26 @@ import productModel from '../models/product.model.js'
 import categoryModel from '../models/category.model.js'
 import reviewModel from '../models/review.model.js'
 import globalModel from '../models/global.model.js'
+import slugify from 'slugify'
 
 class ProductService {
+  generateUniqueSlug = async (productName) => {
+    let baseSlug = slugify(productName, { lower: true });
+    let uniqueSlug = baseSlug;
+    let counter = 1;
+
+    while (await productModel.exists({ product_slug: uniqueSlug })) {
+      uniqueSlug = `${baseSlug}-${counter}`;
+      counter++;
+    }
+
+    return uniqueSlug;
+  }
   createProduct = async (data) => {
     const categories = await categoryModel.find({ category_slug: { $in: data.product_list_categories } }).sort({ category_level: 1, }).lean()
     data.product_list_categories = categories.map((cat) => cat.category_slug);
+    const slug = await this.generateUniqueSlug(data.product_name);
+    data.product_slug = slug;
     const newProduct = await productModel.create(data)
     return newProduct
   }
@@ -75,6 +90,8 @@ class ProductService {
   updateProduct = async (_id, bodyUpdate) => {
     const categories = await categoryModel.find({ category_slug: { $in: bodyUpdate.product_list_categories } }).sort({ category_level: 1, }).lean()
     bodyUpdate.product_list_categories = categories.map((cat) => cat.category_slug);
+    const slug = await this.generateUniqueSlug(bodyUpdate.product_name);
+    bodyUpdate.product_slug = slug;
     const product = await productModel.findByIdAndUpdate(_id, bodyUpdate, { new: true })
     return product
   }

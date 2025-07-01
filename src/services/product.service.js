@@ -84,7 +84,7 @@ class ProductService {
     }
   }
   getProductBestSeller = async () => {
-    const products = await productModel.find({ product_list_categories: 'best-seller' }).sort({ createdAt: -1 }).lean()
+    const products = await productModel.find({ product_list_categories: 'best-seller' }).sort({ createdAt: -1 }).limit(12).lean()
     return products
   }
   updateProduct = async (_id, bodyUpdate) => {

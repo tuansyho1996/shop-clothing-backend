@@ -46,22 +46,24 @@ class ProductService {
       };
     }
   }
+
   getProduct = async (slug) => {
+
     if (slug === 'all') {
       const products = await productModel.find().sort({ createdAt: -1 }).lean()
       return products
     }
-    if (slug === 'products_home') {
-      const limit = await globalModel.findOne({ global_name: 'products_home' })
-      const query = productModel.find({
-        product_list_categories: { $nin: ['kid'] }
-      }).sort({ createdAt: -1 });
-      if (!isNaN(limit) && limit > 0) {
-        query.limit(limit); // 
-      }
-      const products = await query.lean();
-      return products
-    }
+    // if (slug === 'products_home') {
+    //   const limit = await globalModel.findOne({ global_name: 'products_home' })
+    //   const query = productModel.find({
+    //     product_list_categories: { $nin: ['kid'] }
+    //   }).sort({ createdAt: -1 });
+    //   if (!isNaN(limit) && limit > 0) {
+    //     query.limit(limit); // 
+    //   }
+    //   const products = await query.lean();
+    //   return products
+    // }
     else {
       const product = await productModel.findOne({ product_slug: slug }).lean();
       if (!product) return null;

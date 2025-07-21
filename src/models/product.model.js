@@ -22,6 +22,9 @@ const productSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
+    product_price_eth: {
+      type: Number,
+    },
     product_list_categories: {
       type: [String],
     },

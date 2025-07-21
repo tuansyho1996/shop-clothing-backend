@@ -4,7 +4,7 @@ import productModel from '../models/product.model.js';
 
 class ProductsOfCategoryService {
   getProductsCategory = async (category, limit, page) => {
-    const categoryArray = category.split("&");
+    const categoryArray = category.split("--");
     // Đảm bảo limit và page là số nguyên hợp lệ
     limit = parseInt(limit) || 12;
     page = parseInt(page) || 1;

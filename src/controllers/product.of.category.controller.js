@@ -4,7 +4,7 @@ class ProductsOfCategoryController {
   getProductsCategory = async (req, res) => {
     return new OK({
       message: "Get successful products category",
-      metadata: await ProductOfCategoryService.getProductsCategory(req.params.category, req.query.limit, req.query.page)
+      metadata: await ProductOfCategoryService.getProductsCategory(req.params.category, 20, req.query.page)
     }).send(res)
   }
 

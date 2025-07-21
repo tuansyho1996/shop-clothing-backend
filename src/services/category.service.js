@@ -20,6 +20,7 @@ class CategoryService {
       return category
     }
   }
+
   updateCategory = async (id, bodyUpdate) => {
     const category = await categoryModel.findOneAndUpdate({ _id: id }, bodyUpdate, { new: true })
     return category

@@ -38,6 +38,18 @@ class ProductController {
       metadata: await ProductService.deleteProduct(req.params.id)
     }).send(res)
   }
+  convertPriceToEth = async (req, res) => {
+    return new OK({
+      message: 'Convert successful price product to eth',
+      metadata: await ProductService.convertPriceToEth()
+    }).send(res)
+  }
+  removeProductFromBestSeller = async (req, res) => {
+    return new OK({
+      message: 'Remove product from best seller category',
+      metadata: await ProductService.removeProductFromBestSeller(req.params.id)
+    }).send(res)
+  }
 }
 
 export default new ProductController

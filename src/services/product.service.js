@@ -32,12 +32,8 @@ class ProductService {
 
     if (!isNaN(page) && page > 0) {
       const [totalProducts, products] = await Promise.all([
-        productModel.countDocuments({
-          product_list_categories: { $nin: ['kid'] }
-        }),
-        productModel.find({
-          product_list_categories: { $nin: ['kid'] }
-        }).sort({ createdAt: -1 }).skip(skip).limit(limit).lean()
+        productModel.countDocuments(),
+        productModel.find().sort({ createdAt: -1 }).skip(skip).limit(limit).lean()
       ]);
       const totalPage = Math.ceil(totalProducts / limit);
       return {
@@ -53,17 +49,7 @@ class ProductService {
       const products = await productModel.find().sort({ createdAt: -1 }).lean()
       return products
     }
-    // if (slug === 'products_home') {
-    //   const limit = await globalModel.findOne({ global_name: 'products_home' })
-    //   const query = productModel.find({
-    //     product_list_categories: { $nin: ['kid'] }
-    //   }).sort({ createdAt: -1 });
-    //   if (!isNaN(limit) && limit > 0) {
-    //     query.limit(limit); // 
-    //   }
-    //   const products = await query.lean();
-    //   return products
-    // }
+
     else {
       const product = await productModel.findOne({ product_slug: slug }).lean();
       if (!product) return null;
@@ -99,6 +85,29 @@ class ProductService {
   }
   deleteProduct = async (id) => {
     return await productModel.deleteOne({ _id: id })
+  }
+  // convert eth
+  convertPriceToEth = async () => {
+    const ethPrice = 2700; // Example ETH price, replace with actual logic to fetch current ETH price
+    const products = await productModel.find().lean();
+    console.log('check')
+    const updatedProducts = products.map(product => {
+      const ethValue = (product.product_price / ethPrice).toFixed(6);
+      return {
+        ...product,
+        product_price_eth: ethValue
+      };
+    });
+    await Promise.all(updatedProducts.map(product =>
+      productModel.updateOne({ _id: product._id }, { product_price_eth: product.product_price_eth })
+    ));
+    return updatedProducts;
+  }
+  removeProductFromBestSeller = async (productId) => {
+    return await productModel.updateOne(
+      { _id: productId },
+      { $pull: { product_list_categories: 'best-seller' } }
+    );
   }
 }
 export default new ProductService

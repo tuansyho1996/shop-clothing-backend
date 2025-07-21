@@ -14,6 +14,7 @@ class CategoryController {
       metadata: await CategoryService.getCategory(req.params.id)
     }).send(res)
   }
+
   updateCategory = async (req, res) => {
     return new OK({
       message: "Update successful category",

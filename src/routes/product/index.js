@@ -20,4 +20,4 @@ router.delete('/best-seller/:id', asyncHandle(ProductController.removeProductFro
 
 // router.get('/:id', asyncHandle(ProductController.getProductById))
 
-export default router
+export default router   

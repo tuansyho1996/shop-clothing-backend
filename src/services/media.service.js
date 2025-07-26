@@ -77,7 +77,7 @@ class MediaService {
         $options: "i"
       }
     })
-      .sort({ createdAt: 1 })
+      .sort({ createdAt: -1 })
       .limit(parseInt(limit) || 20)
       .lean()
 

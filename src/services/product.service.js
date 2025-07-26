@@ -32,8 +32,8 @@ class ProductService {
 
     if (!isNaN(page) && page > 0) {
       const [totalProducts, products] = await Promise.all([
-        productModel.countDocuments(),
-        productModel.find().sort({ createdAt: -1 }).skip(skip).limit(limit).lean()
+        productModel.find({ product_list_categories: { $in: ['og-crypto-series-honoring-the-pioneers-of-blockchain', 'defi-culture-wear-the-protocols-that-power-web3', 'meme-coins-for-the-culture-for-the-chaos'] } }).countDocuments(),
+        productModel.find({ product_list_categories: { $in: ['og-crypto-series-honoring-the-pioneers-of-blockchain', 'defi-culture-wear-the-protocols-that-power-web3', 'meme-coins-for-the-culture-for-the-chaos'] } }).sort({ createdAt: -1 }).skip(skip).limit(limit).lean()
       ]);
       const totalPage = Math.ceil(totalProducts / limit);
       return {
@@ -46,7 +46,7 @@ class ProductService {
   getProduct = async (slug) => {
 
     if (slug === 'all') {
-      const products = await productModel.find().sort({ createdAt: -1 }).lean()
+      const products = await productModel.find({ product_list_categories: { $in: ['og-crypto-series-honoring-the-pioneers-of-blockchain', 'defi-culture-wear-the-protocols-that-power-web3', 'meme-coins-for-the-culture-for-the-chaos'] } }).sort({ createdAt: -1 }).lean()
       return products
     }
 

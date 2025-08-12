@@ -11,7 +11,13 @@ class ProductController {
   getProduct = async (req, res) => {
     return new OK({
       message: 'Get successful all product',
-      metadata: await ProductService.getProduct(req.params.slug)
+      metadata: await ProductService.getProduct(req.params.slug, req.query)
+    }).send(res)
+  }
+  getProductSiteMap = async (req, res) => {
+    return new OK({
+      message: 'Get successful product sitemap',
+      metadata: await ProductService.getProductSiteMap()
     }).send(res)
   }
   getProductShop = async (req, res) => {

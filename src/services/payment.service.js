@@ -110,18 +110,19 @@ class PaymentService {
 
   };
   completeOrder = async (body) => {
-    const { infoOrder, infoCustomer, userId } = body
+
+    const data = body
+    data.items = JSON.parse(data.items)
+
     const quantity = await globalModel.findOne({ global_name: 'quantity_sell' })
     let nextNumberOrder = 1;
-    const latestOrder = await orderModel.findOne({ number_order: { $type: "number" } })
-      .sort({ number_order: -1 })
-      .lean();
-    if (latestOrder && typeof latestOrder.number_order === 'number') {
-      nextNumberOrder = latestOrder.number_order + 1;
+    const latestOrder = await orderModel.countDocuments()
+    if (latestOrder) {
+      nextNumberOrder = latestOrder + 1;
     }
-    const newOrder = await orderModel.create({ order_info: infoOrder, order_info_customer: infoCustomer, order_user_id: userId, number_order: parseInt(quantity?.global_value) + nextNumberOrder })
+    const newOrder = await orderModel.create({ order_info: data, number_order: parseInt(nextNumberOrder) + parseInt(quantity?.global_value) });
     if (newOrder) {
-      await sendOrderConfirmation(newOrder?.order_info_customer, newOrder?.order_info)
+      sendOrderConfirmation(newOrder)
     }
     return newOrder
   }
@@ -135,5 +136,6 @@ class PaymentService {
       return order
     }
   }
+
 }
 export default new PaymentService

@@ -34,6 +34,13 @@ class UserService {
     }
     return null
   }
+  connectUser = async (address) => {
+    let user = await userModel.findOne({ usr_address: address })
+    if (!user) {
+      user = await userModel.create({ usr_address: address })
+    }
+    return { user: getInfoData({ filed: ['_id', 'usr_email', 'usr_first_name', 'usr_last_name', 'usr_address'], object: user }) }
+  }
 }
 
 export default new UserService

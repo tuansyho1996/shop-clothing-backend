@@ -20,7 +20,11 @@ class CategoryService {
       return category
     }
   }
+  getCategorySitemap = async () => {
+    const categories = await categoryModel.find({ category_slug: { $ne: "best-seller" } }).sort({ category_level: 1, }).lean()
 
+    return categories
+  }
   updateCategory = async (id, bodyUpdate) => {
     const category = await categoryModel.findOneAndUpdate({ _id: id }, bodyUpdate, { new: true })
     return category

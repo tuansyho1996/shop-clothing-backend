@@ -13,6 +13,12 @@ class ProductController {
       metadata: await UserService.login(req.body)
     }).send(res)
   }
+  connectUser = async (req, res) => {
+    return new OK({
+      message: "Connect user successful",
+      metadata: await UserService.connectUser(req.params.address)
+    }).send(res)
+  }
 }
 
 export default new ProductController

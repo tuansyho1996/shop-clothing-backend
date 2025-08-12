@@ -14,7 +14,12 @@ class CategoryController {
       metadata: await CategoryService.getCategory(req.params.id)
     }).send(res)
   }
-
+  getCategorySitemap = async (req, res) => {
+    return new OK({
+      message: "Get successful category sitemap",
+      metadata: await CategoryService.getCategorySitemap()
+    }).send(res)
+  }
   updateCategory = async (req, res) => {
     return new OK({
       message: "Update successful category",

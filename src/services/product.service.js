@@ -3,6 +3,11 @@ import categoryModel from '../models/category.model.js'
 import reviewModel from '../models/review.model.js'
 import globalModel from '../models/global.model.js'
 import slugify from 'slugify'
+const categoriesArray = [
+  'og-crypto-series-honoring-the-pioneers-of-blockchain',
+  'defi-culture-wear-the-protocols-that-power-web3',
+  'meme-coins-for-the-culture-for-the-chaos'
+];
 
 class ProductService {
   generateUniqueSlug = async (productName) => {
@@ -42,11 +47,25 @@ class ProductService {
       };
     }
   }
-
-  getProduct = async (slug) => {
-
+  getProductSiteMap = async () => {
+    const products = await productModel.find({ product_list_categories: { $in: ['og-crypto-series-honoring-the-pioneers-of-blockchain', 'defi-culture-wear-the-protocols-that-power-web3', 'meme-coins-for-the-culture-for-the-chaos'] } }).sort({ createdAt: -1 }).lean()
+    return products
+  }
+  getProduct = async (slug, query) => {
     if (slug === 'all') {
-      const products = await productModel.find({ product_list_categories: { $in: ['og-crypto-series-honoring-the-pioneers-of-blockchain', 'defi-culture-wear-the-protocols-that-power-web3', 'meme-coins-for-the-culture-for-the-chaos'] } }).sort({ createdAt: -1 }).lean()
+      const { limit, page, keyWords } = query
+      const pageNumber = parseInt(page) || 1;
+      const limitNumber = parseInt(limit) || 12;
+      const searchQuery = {
+        ...(keyWords ? { product_name: { $regex: keyWords, $options: 'i' } } : {}),
+        product_list_categories: { $in: categoriesArray }
+      };
+      const skip = (pageNumber - 1) * limitNumber;
+      const products = await productModel.find(searchQuery)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limitNumber)
+        .lean();
       return products
     }
 

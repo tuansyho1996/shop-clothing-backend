@@ -10,19 +10,19 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendOrderConfirmation = async (infoCustomer, orderInfo) => {
+const sendOrderConfirmation = async (order) => {
   const mailOptions = {
     from: '"Carnobon" <support@carnobon.com>',
-    to: infoCustomer?.emailAddress,
-    subject: `Xác nhận đơn hàng #${orderInfo?.id}`,
+    to: order?.order_info.email,
+    subject: `Xác nhận đơn hàng #${order?._id}`,
     html: `
-      <h3>Chào ${infoCustomer?.givenName} ${infoCustomer?.surname},</h3>
+      <h3>Chào ${order?.order_info?.firstName} ${order?.order_info?.lastName},</h3>
       <p>Cảm ơn bạn đã đặt hàng tại Luna Decor!</p>
-      <p><strong>Mã đơn hàng:</strong> ${orderInfo?.id}</p>
+      <p><strong>Mã đơn hàng:</strong> ${order?._id}</p>
       <ul>
-        ${infoCustomer?.items.map(item => `<li>${item.product_name} - ${item.product_count} x $${item.product_price}</li>`).join('')}
+        ${order?.order_info?.items.map(item => `<li>${item.product_name} - ${item.product_count} x $${item.product_price_eth}</li>`).join('')}
       </ul>
-      <p><strong>Tổng cộng:</strong> $${infoCustomer.itemTotal}</p>
+      <p><strong>Tổng cộng:</strong> $${order?.order_info?.subtotalEth}</p>
       <p>Chúng tôi sẽ sớm gửi hàng cho bạn!</p>
     `,
   };

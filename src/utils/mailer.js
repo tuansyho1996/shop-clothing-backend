@@ -20,7 +20,7 @@ const sendOrderConfirmation = async (order) => {
       <p>Cảm ơn bạn đã đặt hàng tại Luna Decor!</p>
       <p><strong>Mã đơn hàng:</strong> ${order?._id}</p>
       <ul>
-        ${order?.order_info?.items.map(item => `<li>${item.product_name} - ${item.product_count} x $${item.product_price_eth}</li>`).join('')}
+        ${order?.order_info?.items?.map(item => `<li>${item.product_name} - ${item.product_count} x $${item.product_price_eth}</li>`).join('')}
       </ul>
       <p><strong>Tổng cộng:</strong> $${order?.order_info?.subtotalEth}</p>
       <p>Chúng tôi sẽ sớm gửi hàng cho bạn!</p>
